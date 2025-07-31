@@ -7,49 +7,51 @@
       </div>
 
       <!-- Tambah Checklist -->
-      <div class="flex flex-wrap gap-2 mb-6">
-        <input v-model="newChecklist" placeholder="Checklist baru..." class="input flex-1 min-w-0" />
+<!-- Tambah Checklist -->
+<div class="flex flex-wrap gap-2 mb-6">
+  <input v-model="newChecklist" placeholder="Checklist baru..." class="input flex-1 min-w-0" />
+  <input type="color" v-model="selectedColor" class="input w-12 h-10 p-1" />
+  <button @click="addChecklist" class="bg-blue-500 text-white px-4 py-2 rounded">Tambah</button>
+</div>
 
-        <select v-model="selectedColor" class="input w-32">
-          <option value="blue">Biru</option>
-          <option value="green">Hijau</option>
-          <option value="red">Merah</option>
-          <option value="yellow">Kuning</option>
-          <option value="purple">Ungu</option>
-        </select>
+<!-- Daftar Checklist -->
+<div v-if="checklists.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  <div
+    v-for="checklist in checklists"
+    :key="checklist.id"
+    class="p-4 rounded shadow"
+    :style="{ backgroundColor: checklist.color || '#ffffff' }"
+  >
+    <div
+      class="flex justify-between items-center mb-2 p-2 rounded"
+      :style="{ backgroundColor: checklist.color || '#e5e7eb' }"
+    >
+      <h2 class="font-semibold text-lg text-white">{{ checklist.name }}</h2>
+      <button @click="deleteChecklist(checklist.id)" class="text-white text-sm">Hapus</button>
+    </div>
 
-        <button @click="addChecklist" class="bg-blue-500 text-white px-4 py-2 rounded">Tambah</button>
-      </div>
+    <!-- Daftar Item Checklist (max 3) -->
+    <ul class="text-sm space-y-1 mb-2">
+      <li
+        v-for="item in checklist.items.slice(0, 3)"
+        :key="item.id"
+        class="flex items-center"
+      >
+        <input type="checkbox" :checked="item.itemCompletionStatus" class="mr-2" disabled />
+        <span :class="{ 'line-through text-gray-400': item.itemCompletionStatus }">
+          {{ item.name || item.itemName }}
+        </span>
+      </li>
+    </ul>
+
+    <router-link :to="`/checklists/${checklist.id}`" class="text-blue-600 hover:underline text-sm">
+      Lihat Detail
+    </router-link>
+  </div>
+</div>
 
       <!-- Daftar Checklist -->
-      <div v-if="checklists.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div
-          v-for="checklist in checklists"
-          :key="checklist.id"
-          class="p-4 rounded shadow"
-          :class="`bg-${checklist.color || 'white'}-100 border-t-4 border-${checklist.color || 'gray'}-400`"
-        >
-          <div class="flex justify-between items-center mb-2">
-            <h2 class="font-semibold text-lg">{{ checklist.name }}</h2>
-            <button @click="deleteChecklist(checklist.id)" class="text-red-500 text-sm">Hapus</button>
-          </div>
 
-          <!-- Daftar Item Checklist (max 3) -->
-          <ul class="text-sm space-y-1 mb-2">
-            <li v-for="item in checklist.items.slice(0, 3)" :key="item.id" class="flex items-center">
-              <input type="checkbox" :checked="item.itemCompletionStatus" class="mr-2" disabled />
-              <span :class="{ 'line-through text-gray-400': item.itemCompletionStatus }">
-                {{ item.name || item.itemName }}
-              </span>
-            </li>
-          </ul>
-
-          <!-- Link ke detail -->
-          <router-link :to="`/checklists/${checklist.id}`" class="text-blue-600 hover:underline text-sm">
-            Lihat Detail
-          </router-link>
-        </div>
-      </div>
       <p v-else class="text-gray-500 text-center mt-8">Belum ada checklist</p>
     </div>
   </div>

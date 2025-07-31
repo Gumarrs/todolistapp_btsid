@@ -2,11 +2,18 @@
   <div class="min-h-screen bg-gray-100 p-6">
     <div class="max-w-2xl mx-auto">
       <h1 class="text-2xl font-bold mb-4">Detail Checklist</h1>
+      <div class="mb-4">
+          <button @click="goBack" class="text-blue-500 hover:underline">
+    ← Kembali ke Checklist
+  </button>
+
+</div>
 
       <div class="flex mb-4">
         <input v-model="newItem" placeholder="Item baru..." class="input flex-1 mr-2" />
         <button @click="addItem" class="bg-blue-500 text-white px-4 py-2 rounded">Tambah</button>
       </div>
+      
 
       <ul class="space-y-2">
         <li
@@ -57,7 +64,9 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useToast } from 'vue-toastification'
+import { useRouter } from 'vue-router' // tambahkan useRouter
 
+const router = useRouter() // inisialisasi router
 const route = useRoute()
 const toast = useToast()
 const checklistId = route.params.id
@@ -70,6 +79,9 @@ const editItemName = ref('')
 const deleteTarget = ref(null)
 
 const getItemName = (item) => item.name || item.itemName || 'Tanpa Nama'
+const goBack = () => {
+  router.push('/checklists')
+}
 
 const getItems = async () => {
   try {
